@@ -1,0 +1,6 @@
+#!/bin/bash
+# original docker build command
+echo "overwriting docker build -f $DOCKERFILE_PATH -t $IMAGE_NAME ."
+
+docker build --build-arg hvga=0 -t ${DOCKER_REPO}:latest .
+docker build --build-arg hvga=1 -t ${DOCKER_REPO}:1.4 .
