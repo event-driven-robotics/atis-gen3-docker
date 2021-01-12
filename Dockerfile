@@ -11,14 +11,15 @@ RUN apt install -y ca-certificates
 RUN if [ $hvga -eq 1 ]; then \
 		echo "Installing older 1.4 version for HVGA"; \
 		echo "deb [arch=amd64 trusted=yes] https://prophesee:DbnLdKL5YXnMndWg@apt.prophesee.ai/dists/ubuntu bionic main" >> /etc/apt/sources.list; \
+    apt update; \
+    apt install -y prophesee-* ; \
 	else \
     	echo "deb [arch=amd64 trusted=yes] https://prophesee:DbnLdKL5YXnMndWg@apt.prophesee.ai/dists/public/pyR7K4hz/ubuntu bionic essentials" >> /etc/apt/sources.list; \
+      apt update; \
+      apt install -y metavision-*; \
     fi
 
-RUN apt update
-
 RUN apt install -y \
-  metavision-* \
   libcanberra-gtk-module \
   python3.7 \
   python3-pip \
