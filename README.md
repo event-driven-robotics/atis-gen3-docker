@@ -34,6 +34,7 @@ The meaning of the options are:
 * -v /dev/bus/usb:/dev/bus/usb : mount the /dev folder so the docker can find the right device
 * -v /tmp/.X11-unix:/tmp/.X11-unix : mount the temporary configuration for x11 to use the same options as the host
 * -e DISPLAY=unix$DISPLAY : set the environment variable for X11 forwarding
+* --name : name your container so you remember it, if not specified docker will assign a random name that you will have to remember
 
 :warning: remember to use `..atis-gen3:1.4` if you are using the HVGA camera
 
