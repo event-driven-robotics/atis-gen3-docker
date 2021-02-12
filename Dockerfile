@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM eventdrivenrobotics/event-driven:bionic_yarp_v3.3.2_ed_v1.5
 
 ARG hvga=0
 
