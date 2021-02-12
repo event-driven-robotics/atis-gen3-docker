@@ -26,7 +26,7 @@ to enable the X11 forwarding on the host side.
 
 Then run a container with the right parameters:
 
-`docker run -it --privileged -v /dev/bus/usb:/dev/bus/usb -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY eventdrivenrobotics/ --name <container_name> atis-gen3:latest`
+`docker run -it --privileged -v /dev/bus/usb:/dev/bus/usb -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY --name <container_name> eventdrivenrobotics/atis-gen3:latest`
 
 The meaning of the options are:
 * -it : runs the container in an interactive bash
