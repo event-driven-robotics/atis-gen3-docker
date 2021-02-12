@@ -34,7 +34,7 @@ The meaning of the options are:
 * -v /dev/bus/usb:/dev/bus/usb : mount the /dev folder so the docker can find the right device
 * -v /tmp/.X11-unix:/tmp/.X11-unix : mount the temporary configuration for x11 to use the same options as the host
 * -e DISPLAY=unix$DISPLAY : set the environment variable for X11 forwarding
-ma
+
 :warning: remember to use `..atis-gen3:1.4` if you are using the HVGA camera
 
 This will start the new container with a terminal. To close this container you can use `ctrl+d`. The container still exists (on the host type `docker ps -a` to see it's still there. Take note of the container name. Next time you want to open this same container you will need to:
