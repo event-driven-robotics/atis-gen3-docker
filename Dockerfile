@@ -12,7 +12,9 @@ RUN if [ $hvga -eq 1 ]; then \
 		echo "Installing older 1.4 version for HVGA"; \
 		echo "deb [arch=amd64 trusted=yes] https://prophesee:DbnLdKL5YXnMndWg@apt.prophesee.ai/dists/ubuntu bionic main" >> /etc/apt/sources.list; \
     apt update; \
-    apt install -y prophesee-* ; \
+    apt install -y prophesee-* \
+    libboost-filesystem-dev \
+    libboost-system-dev; \
 	else \
     	echo "deb [arch=amd64 trusted=yes] https://prophesee:DbnLdKL5YXnMndWg@apt.prophesee.ai/dists/public/pyR7K4hz/ubuntu bionic essentials" >> /etc/apt/sources.list; \
       apt update; \
@@ -21,6 +23,7 @@ RUN if [ $hvga -eq 1 ]; then \
 
 RUN apt install -y \
   libcanberra-gtk-module \
+  libboost-chrono-dev \
   python3.7 \
   python3-pip \
   python3-tk \
@@ -38,3 +41,10 @@ RUN pip3 install \
   matplotlib \
   jupyter
 
+RUN cd /usr/local/src/event-driven/build &&\
+	git checkout atis3_bridge_for_hvga && git pull &&\
+    cmake -DBUILD_HARDWAREIO=ON \
+          -DENABLE_atis3=ON \
+          -DVLIB_CLOCK_PERIOD_NS=1000 \
+          .. &&\
+    make -j `nproc` install
