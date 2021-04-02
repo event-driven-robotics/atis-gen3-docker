@@ -42,7 +42,7 @@ RUN pip3 install \
   jupyter
 
 RUN cd /usr/local/src/event-driven/build &&\
-	git checkout atis3_bridge_for_hvga && git pull &&\
+	git checkout master && git pull &&\
     cmake -DBUILD_HARDWAREIO=ON \
           -DENABLE_atis3=ON \
           -DVLIB_CLOCK_PERIOD_NS=1000 \
