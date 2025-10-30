@@ -2,5 +2,32 @@
 # original docker build command
 echo "overwriting docker build -f $DOCKERFILE_PATH -t $IMAGE_NAME ."
 
-docker build --build-arg hvga=0 -t ${DOCKER_REPO}:latest .
-docker build --build-arg hvga=1 -t ${DOCKER_REPO}:1.4 .
+{
+read header
+
+header=($header)
+len=${#header[@]}
+while read software_version_line
+do
+        # The new image tag will include the version of our software, prefixed to the os image we're currently building
+        versions=($software_version_line)
+		
+		IFS=':'
+        read -a yarp_tag <<< "${versions[0]}"
+
+        IFS='_'        			
+        read -a yarp_tag_splitted <<< "${yarp_tag[1]}"
+
+		IFS=' '
+
+        IMAGE_TAG="${DOCKER_REPO}:${yarp_tag_splitted[0]}_yarp_${yarp_tag_splitted[2]}_ed_${yarp_tag_splitted[4]}"
+
+	args=""
+	for (( i=0; i<$len - 1; i++ )); do
+		args=$(printf "%s%s %s=%s" "$args" "--build-arg" "${header[$i]}" "${versions[$i]} ")
+	done
+		
+        echo "docker build $args -t ${IMAGE_TAG} ."
+        docker build $args -t ${IMAGE_TAG} .
+done
+} < base_images.txt

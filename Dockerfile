@@ -1,50 +1,30 @@
-FROM eventdrivenrobotics/event-driven:bionic_yarp_v3.3.2_ed_v1.5
+ARG EVENT_DRIVEN_IMAGE=eventdrivenrobotics/event-driven:focal_yarp_v3.8.1_ed_vmain
 
-ARG hvga=0
+#eventdrivenrobotics/event-driven:bionic_yarp_v3.3.2_ed_v1.5 3.1
+
+FROM ${EVENT_DRIVEN_IMAGE}
+
+ARG SDK_VERSION
 
 ENV DEBIAN_FRONTEND noninteractive 
 
-RUN apt update
+# Check SDK version and install appropriate packages  
 
-RUN apt install -y ca-certificates
-
-RUN if [ $hvga -eq 1 ]; then \
+RUN if [ $SDK_VERSION = "1.4" ]; then \
 		echo "Installing older 1.4 version for HVGA"; \
 		echo "deb [arch=amd64 trusted=yes] https://prophesee:DbnLdKL5YXnMndWg@apt.prophesee.ai/dists/ubuntu bionic main" >> /etc/apt/sources.list; \
     apt update; \
-    apt install -y prophesee-* \
-    libboost-filesystem-dev \
-    libboost-system-dev; \
-	else \
-    	echo "deb [arch=amd64 trusted=yes] https://prophesee:DbnLdKL5YXnMndWg@apt.prophesee.ai/dists/public/pyR7K4hz/ubuntu bionic essentials" >> /etc/apt/sources.list; \
+    apt install -y prophesee-* ; \
+	elif [ $SDK_VERSION = "3.1" ]; then \
+      echo "Installing version metavision SDK version 3.1"; \
+    	wget -O  /etc/apt/sources.list.d/metavision.list https://files.prophesee.ai/share/dists/public/sources_list/wohr2Cho/focal/metavision.list; \
       apt update; \
-      apt install -y metavision-*; \
+      apt install -y metavision-sdk; \
+  else \
+      echo "SDK version ${SDK_VERSION} is not a valid option. Please set SDK_VERSION to 1.4 or 3.1"; \
+      exit 1; \
     fi
 
-RUN apt install -y \
-  libcanberra-gtk-module \
-  libboost-chrono-dev \
-  python3.7 \
-  python3-pip \
-  python3-tk \
-  cmake \
-  && apt-get autoremove \
-  && apt-get clean \
-  && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
+WORKDIR /usr/local/src/event-driven/build
 
-RUN pip3 install \
-  scikit-build 
-
-
-RUN pip3 install \
-#  opencv-python  \
-  matplotlib \
-  jupyter
-
-RUN cd /usr/local/src/event-driven/build &&\
-	git checkout master && git pull &&\
-    cmake -DBUILD_HARDWAREIO=ON \
-          -DENABLE_atis3=ON \
-          -DVLIB_CLOCK_PERIOD_NS=1000 \
-          .. &&\
-    make -j `nproc` install
+RUN cmake .. && make -j $(nproc) install
